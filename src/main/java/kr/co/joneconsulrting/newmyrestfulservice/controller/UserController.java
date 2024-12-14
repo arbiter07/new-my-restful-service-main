@@ -67,7 +67,7 @@ public class UserController {
             throw new UserNotFoundException("id-" + id);
         }
 
-        EntityModel entityModel = EntityModel.of(user);
+        EntityModel<User> entityModel = EntityModel.of(user);
 
         WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
         entityModel.add(linkTo.withRel("all-users")); // http://127.0.0.1:8080/users
@@ -100,7 +100,7 @@ public class UserController {
         User user = service.deleteById(id);
 
         if (user == null) {
-            throw new UserNotFoundException(String.format("ID[%s] not found", id));
+            throw new UserNotFoundException("ID[%s] not found".formatted(id));
         }
     }
 }

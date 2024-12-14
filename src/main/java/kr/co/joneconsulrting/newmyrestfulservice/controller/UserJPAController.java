@@ -37,7 +37,7 @@ public class UserJPAController {
 //    public List<User> retrieveAllUsers() {
 //        return userRepository.findAll();
 //    }
-    public ResponseEntity retrieveAllUsers() {
+    public ResponseEntity<?> retrieveAllUsers() {
         List<User> users = userRepository.findAll();
 
         ResponseData response = ResponseData.builder()
@@ -45,7 +45,7 @@ public class UserJPAController {
                 .users(users)
                 .build();
 
-        EntityModel entityModel = EntityModel.of(response);
+        EntityModel<ResponseData> entityModel = EntityModel.of(response);
         WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
         entityModel.add(linkTo.withSelfRel());
 
@@ -53,14 +53,14 @@ public class UserJPAController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity retrieveUser(@PathVariable int id) {
+    public ResponseEntity<?> retrieveUser(@PathVariable int id) {
         Optional<User> user = userRepository.findById(id);
 
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new UserNotFoundException("id-" + id);
         }
 
-        EntityModel entityModel = EntityModel.of(user.get());
+        EntityModel<User> entityModel = EntityModel.of(user.get());
         WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
         entityModel.add(linkTo.withRel("all-users"));
 
@@ -89,7 +89,7 @@ public class UserJPAController {
     @GetMapping("/users/{id}/posts")
     public List<Post> retrieveAllPostsByUser(@PathVariable int id) {
         Optional<User> user = userRepository.findById(id);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new UserNotFoundException("id-" + id);
         }
 
@@ -99,7 +99,7 @@ public class UserJPAController {
     @PostMapping("/users/{id}/posts")
     public ResponseEntity<Post> createPost(@PathVariable int id, @RequestBody Post post) {
         Optional<User> userOptional = userRepository.findById(id);
-        if (!userOptional.isPresent()) {
+        if (userOptional.isEmpty()) {
             throw new UserNotFoundException("id-" + id);
         }
 

@@ -9,12 +9,8 @@ import kr.co.joneconsulrting.newmyrestfulservice.bean.User;
 import kr.co.joneconsulrting.newmyrestfulservice.dao.UserDaoService;
 import kr.co.joneconsulrting.newmyrestfulservice.exception.UserNotFoundException;
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +32,7 @@ public class AdminUserController {
 
         AdminUser adminUser = new AdminUser();
         if (user == null) {
-            throw new UserNotFoundException(String.format("ID[%s] not found", id));
+            throw new UserNotFoundException("ID[%s] not found".formatted(id));
         } else {
             BeanUtils.copyProperties(user, adminUser);
         }
@@ -83,7 +79,7 @@ public class AdminUserController {
         User user = service.findOne(id);
 
         if (user == null) {
-            throw new UserNotFoundException(String.format("ID[%s] not found", id));
+            throw new UserNotFoundException("ID[%s] not found".formatted(id));
         }
 
         AdminUserV2 adminUserV2 = new AdminUserV2();

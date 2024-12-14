@@ -64,14 +64,14 @@ public class UserJPAController2 {
 
     // jpa/users/{id}
     @GetMapping("/users/{id}")
-    public ResponseEntity retrieveUsersById(@PathVariable int id){
+    public ResponseEntity<?> retrieveUsersById(@PathVariable int id){
         Optional<User> user = userRepository.findById(id);
 
-        if (!user.isPresent()){
+        if (user.isEmpty()){
             throw new UserNotFoundException("id - " + id);
         }
 
-        EntityModel entityModel = EntityModel.of(user.get());
+        EntityModel<User> entityModel = EntityModel.of(user.get());
 
         WebMvcLinkBuilder lintTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
         entityModel.add(lintTo.withRel("all-users"));
@@ -107,7 +107,7 @@ public class UserJPAController2 {
     @GetMapping("/users/{id}/posts")
     public List<Post> retrieveAllPostByUser(@PathVariable int id){
         Optional<User> user = userRepository.findById(id);
-        if(!user.isPresent()){
+        if(user.isEmpty()){
             throw new UserNotFoundException("id-" + id + " user not found");
         }
         return user.get().getPosts();
@@ -116,7 +116,7 @@ public class UserJPAController2 {
     @PostMapping("/users/{id}/posts")
     public ResponseEntity<Post> createPost(@PathVariable int id, @RequestBody Post post) {
         Optional<User> userOptional = userRepository.findById(id);
-        if (!userOptional.isPresent()) {
+        if (userOptional.isEmpty()) {
             throw new UserNotFoundException("id-" + id);
         }
 
